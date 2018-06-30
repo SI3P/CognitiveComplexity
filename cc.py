@@ -17,18 +17,18 @@ class CognitiveComplexity(object):
         fns=dict()
         with open(filename) as file:
             red = redbaron.RedBaron(file.read())
-            # trova tutti i metodi delle classi
-            for cls in red.find_all("ClassNode"):
-                for fn in cls.find_all("DefNode"):
-                    #if not fn.parent_find("DefNode"): # FIXME: necessario?
-                    cc= self.__sequences(fn)+self.__conditions(fn)+ self.__structures(fn)
-                    fns[cls.name + '.' + fn.name]=cc
 
-            # trova tutte le funzioni
-            for fn in red.find_all("DefNode"):
+            # trova tutte le funzioni e ne costruisce il nome puntato (Class.method...)
+            for fn in red.find_all("def"):
+                    names = []
+                    p = fn
+                    while p:
+                        names = [p.name] + names
+                        p = p.parent_find(['def','class']) # trova funzioni o classi che contengono la funzione
+                    name = '.'.join(names)
                 #if not fn.parent_find("DefNode"): # FIXME: necessario?
                     cc= self.__sequences(fn)+self.__conditions(fn)+ self.__structures(fn)
-                    fns[fn.name]=cc
+                    fns[name]=cc
         return fns
         
     def __sequences(self,func):
