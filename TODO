@@ -1,0 +1,6 @@
+Rendere opzionali alcune feature
+	- pesare la ricorsione? (da implementare)
+	- pesare i decoratori?
+	- pesare le funzioni nidificate?
+
+Usare click per gestire gli argomenti e la loro documentazione (o altra libreria)

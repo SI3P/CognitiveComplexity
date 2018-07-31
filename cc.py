@@ -2,7 +2,7 @@
 @author: Simone Papandrea
 '''
 
-import redbaron
+import redbaron, json
 
 redbaron.ipython_behavior = False
 
@@ -74,8 +74,19 @@ class CognitiveComplexity(object):
 
 if __name__ == '__main__':    
     import sys
-    file=r"test.py" if len(sys.argv) != 2 else sys.argv[1]
+    if len(sys.argv) != 3:
+        print("""Syntax:
+            python cc.py file_input.py file_output.json
+            """)
+    else:
+        _, file, file_json = sys.argv
     cc=CognitiveComplexity()
     results=cc.evaluate(file)
-    for name,cc in results.items():
-        print('{} : {}'.format(name,cc))
+    maxCC = max(results.values())
+    with open(file_json, "w", encoding='utf8') as jf:
+        json.dump({'max' : maxCC, 'results': results }, jf)
+    print("Cognitive complexity of:", file)
+    for name, cc in results.items():
+        print('\t{} : {}'.format(name, cc))
+    print("Max cognitive complexity:", maxCC)
+
